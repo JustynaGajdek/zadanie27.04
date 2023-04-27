@@ -1,22 +1,15 @@
 package org.example;
 
 import java.nio.file.attribute.UserPrincipalLookupService;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
-public class App 
-{
-
-
-    // Zad.3.
-    // Analiza stringów: napisz program, który sprawdza, czy dany string jest palindromem (odczytuje się go tak samo od
-    // przodu, jak i od tyłu, np Anna), heterogramem (żadna litera się nie powtarza, np Mateusz), pangramem
-    // (zawiera wszystkie litery alfabetu łacińskiego, np The quick brown fox jumps over a lazy dog), oraz, czy dane
-    // dwa stringi są anagramami (składają się z tych samych liter, np Tom Marvolo Riddle - I am Lord Voldemort)
-
-    public static void main( String[] args )
-    {
+public class App {
+    public static void main(String[] args) {
 //        calculator();
-        spaceVacuum();
+//        spaceVacuum();
+        checkWord();
     }
     // Zad.1.
     // Kalkulator: napisz program kalkulator, który wspiera działania dodawania, odejmowania, mnożenia i dzielenia.
@@ -43,22 +36,31 @@ public class App
 
     public static Float calculate(Float a, Float b, char symbol) {
         switch (symbol) {
-            case '+': return add(a, b);
-            case '-': return subtract(a, b);
-            case '*': return multiply(a, b);
-            case '/': return divide(a, b);
-            default: return null;
+            case '+':
+                return add(a, b);
+            case '-':
+                return subtract(a, b);
+            case '*':
+                return multiply(a, b);
+            case '/':
+                return divide(a, b);
+            default:
+                return null;
         }
     }
+
     public static Float add(Float a, Float b) {
         return a + b;
     }
+
     public static Float subtract(Float a, Float b) {
         return a - b;
     }
+
     public static Float multiply(Float a, Float b) {
         return a * b;
     }
+
     public static Float divide(Float a, Float b) {
         if (b != 0f) {
             return a / b;
@@ -66,24 +68,56 @@ public class App
         return null;
     }
 
-
-
     // Zad.2.
     // Odkurzacz do spacji: napisz program, który oczyszcza dany tekst ze wszystkich nadmiarowych spacji, pozostawiając
     // tylko pojedyncze między słowami. Np Ala   ma           kota                 -> Ala ma kota
 
-    public static void spaceVacuum () {
+    public static void spaceVacuum() {
         System.out.println(" Write your sentence with many spaces.");
         Scanner scanner = new Scanner(System.in);
         String inPutLine = scanner.nextLine();
         String[] lineSplit = inPutLine.trim().split(" ");
         String newString = lineSplit[0];
         for (Integer i = 1; i < lineSplit.length; i++) {
-           if (lineSplit[i] != "") {newString = newString.concat(" ") ;
-            newString = newString.concat(lineSplit[i]) ;
-        }
+            if (lineSplit[i] != "") {
+                newString = newString.concat(" ");
+                newString = newString.concat(lineSplit[i]);
+            }
         }
         System.out.println(newString);
+    }
+
+    // Zad.3.
+    // Analiza stringów: napisz program, który sprawdza, czy dany string jest:
+    // - palindromem (odczytuje się go tak samo od przodu, jak i od tyłu, np Anna),
+    // - heterogramem (żadna litera się nie powtarza, np Mateusz),
+    // - pangramem (zawiera wszystkie litery alfabetu łacińskiego, np The quick brown fox jumps over a lazy dog), oraz,
+    // - czy dane dwa stringi są anagramami (składają się z tych samych liter, np Tom Marvolo Riddle - I am Lord Voldemort)
+
+    public static void checkWord() {
+        System.out.println("Please write a word: ");
+        Scanner scanner = new Scanner(System.in);
+        String userWord = scanner.nextLine();
+        boolean isPalindrom = checkPalindrom(userWord);
+        System.out.println("Palindrom: " + isPalindrom);
+        boolean isHeterogram = checkHeterogram(userWord);
+        System.out.println("Heterogram: " + isHeterogram);
+    }
+
+    public static boolean checkPalindrom(String word) {
+        String newWord = "";
+        for (char letter : word.toCharArray()) {
+            newWord = letter + newWord;
+        }
+        return word.toLowerCase().equals(newWord.toLowerCase());
+    }
+
+    public static boolean checkHeterogram(String word) {
+        Set<Character> setOfLetters = new HashSet<>();
+        for (char letter : word.toLowerCase().toCharArray()) {
+            setOfLetters.add(letter);
+        }
+        return word.length() == setOfLetters.size();
     }
 }
 
