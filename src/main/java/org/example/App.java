@@ -1,13 +1,12 @@
 package org.example;
 
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Scanner;
 
 public class App 
 {
 
-    // Zad.2.
-    // Odkurzacz do spacji: napisz program, który oczyszcza dany tekst ze wszystkich nadmiarowych spacji, pozostawiając
-    // tylko pojedyncze między słowami. Np Ala   ma           kota                 -> Ala ma kota
+
     // Zad.3.
     // Analiza stringów: napisz program, który sprawdza, czy dany string jest palindromem (odczytuje się go tak samo od
     // przodu, jak i od tyłu, np Anna), heterogramem (żadna litera się nie powtarza, np Mateusz), pangramem
@@ -16,7 +15,8 @@ public class App
 
     public static void main( String[] args )
     {
-        calculator();
+//        calculator();
+        spaceVacuum();
     }
     // Zad.1.
     // Kalkulator: napisz program kalkulator, który wspiera działania dodawania, odejmowania, mnożenia i dzielenia.
@@ -66,5 +66,25 @@ public class App
         return null;
     }
 
+
+
+    // Zad.2.
+    // Odkurzacz do spacji: napisz program, który oczyszcza dany tekst ze wszystkich nadmiarowych spacji, pozostawiając
+    // tylko pojedyncze między słowami. Np Ala   ma           kota                 -> Ala ma kota
+
+    public static void spaceVacuum () {
+        System.out.println(" Write your sentence with many spaces.");
+        Scanner scanner = new Scanner(System.in);
+        String inPutLine = scanner.nextLine();
+        String[] lineSplit = inPutLine.trim().split(" ");
+        String newString = lineSplit[0];
+        for (Integer i = 1; i < lineSplit.length; i++) {
+           if (lineSplit[i] != "") {newString = newString.concat(" ") ;
+            newString = newString.concat(lineSplit[i]) ;
+        }
+        }
+        System.out.println(newString);
+    }
 }
+
 
