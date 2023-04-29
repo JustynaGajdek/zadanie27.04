@@ -1,6 +1,7 @@
 package org.example;
 
 import java.nio.file.attribute.UserPrincipalLookupService;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -9,7 +10,9 @@ public class App {
     public static void main(String[] args) {
 //        calculator();
 //        spaceVacuum();
-        checkWord();
+//        checkWord();
+//        checkSentence();
+        checkSentences();
     }
     // Zad.1.
     // Kalkulator: napisz program kalkulator, który wspiera działania dodawania, odejmowania, mnożenia i dzielenia.
@@ -119,6 +122,49 @@ public class App {
         }
         return word.length() == setOfLetters.size();
     }
+    public static void checkSentence() {
+        System.out.println("Please write a sentence: ");
+        Scanner scanner = new Scanner(System.in);
+        String userSentence = scanner.nextLine();
+        boolean isPanagram = checkPanagram(userSentence);
+        System.out.println("Panagram: " + isPanagram);
+    }
+    public static boolean checkPanagram(String sentence) {
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        Set<Character> setAlphabet = new HashSet<>();
+        for (char i : alphabet.toCharArray()) {
+            setAlphabet.add(i);
+        }
+        String cleanSentence = sentence.toLowerCase().replaceAll("\\s+","");
+        Set<Character> setSentence = new HashSet<>();
+        for (char i : cleanSentence.toCharArray()) {
+            setSentence.add(i);
+        }
+        return setSentence.size() == setAlphabet.size() && setSentence.equals(setAlphabet);
+    }
+
+    public static void checkSentences() {
+        System.out.println("Please write first sentence: ");
+        Scanner scanner = new Scanner(System.in);
+        String firstSentence = scanner.nextLine();
+        System.out.println("Please write second sentence: ");
+        String secondSentence = scanner.nextLine();
+        boolean isAnagram = checkAnagram(firstSentence, secondSentence);
+        System.out.println("Anagram: " + isAnagram);
+    }
+    public static boolean checkAnagram(String firstSentence, String secondSentence) {
+        String cleanFirstSentence = firstSentence.toLowerCase().replaceAll("\\s+","");
+        String cleanSecondSentence = secondSentence.toLowerCase().replaceAll("\\s+","");
+        if (cleanFirstSentence.length() != cleanSecondSentence.length()){
+            return false;
+        }
+        char[] cleanFirstSentenceArray = cleanFirstSentence.toCharArray();
+        char[] cleanSecondSentenceArray = cleanSecondSentence.toCharArray();
+        Arrays.sort(cleanFirstSentenceArray);
+        Arrays.sort(cleanSecondSentenceArray);
+        return Arrays.equals(cleanFirstSentenceArray, cleanSecondSentenceArray);
+    }
+
 }
 
 
