@@ -24,17 +24,19 @@ public class App {
     // Wypisz działanie i jego wynik, np.  4 + 5 = 9.
 
     public static void calculator() {
-        String inputLine = getInputData();
-        String[] operationSplit = inputLine.trim().split(" ");
-        Float result = calculate(Float.parseFloat(operationSplit[0]), Float.parseFloat(operationSplit[2]), operationSplit[1].charAt(0));
-        String messageFormatted = String.format("%s %s %s = %f", operationSplit[0], operationSplit[1], operationSplit[2], result);
+        String[] inputData = getInputData();
+        Float firstNumber = Float.parseFloat(inputData[0]);
+        Float secondNumber = Float.parseFloat(inputData[2]);
+        char symbol = inputData[1].charAt(0);
+        Float result = calculate(firstNumber, secondNumber, symbol);
+        String messageFormatted = result == null ? "Oops, something went wrong..." : String.format("%4.2f %s %4.2f = %4.2f", firstNumber, symbol, secondNumber, result);
         System.out.println(messageFormatted);
     }
 
-    public static String getInputData() {
+    public static String[] getInputData() {
         System.out.println("Enter numbers and operator (number operator number):");
         Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+        return scanner.nextLine().trim().split(" ");
     }
 
     public static Float calculate(Float a, Float b, char symbol) {
@@ -76,19 +78,12 @@ public class App {
     // tylko pojedyncze między słowami. Np Ala   ma           kota                 -> Ala ma kota
 
     public static void spaceVacuum() {
-        System.out.println(" Write your sentence with many spaces.");
+        System.out.println("Write your sentence with many spaces:");
         Scanner scanner = new Scanner(System.in);
-        String inPutLine = scanner.nextLine();
-        String[] lineSplit = inPutLine.trim().split(" ");
-        String newString = lineSplit[0];
-        for (Integer i = 1; i < lineSplit.length; i++) {
-            if (lineSplit[i] != "") {
-                newString = newString.concat(" ");
-                newString = newString.concat(lineSplit[i]);
-            }
+        String inputLine = scanner.nextLine();
+        System.out.println(inputLine.trim().replaceAll("\\s+", " "));
         }
-        System.out.println(newString);
-    }
+
 
     // Zad.3.
     // Analiza stringów: napisz program, który sprawdza, czy dany string jest:
@@ -101,68 +96,76 @@ public class App {
         System.out.println("Please write a word: ");
         Scanner scanner = new Scanner(System.in);
         String userWord = scanner.nextLine();
-        boolean isPalindrom = checkPalindrom(userWord);
+        boolean isPalindrom = checkPalindrome(userWord);
         System.out.println("Palindrom: " + isPalindrom);
         boolean isHeterogram = checkHeterogram(userWord);
         System.out.println("Heterogram: " + isHeterogram);
     }
-
-    public static boolean checkPalindrom(String word) {
-        String newWord = "";
-        for (char letter : word.toCharArray()) {
-            newWord = letter + newWord;
-        }
-        return word.toLowerCase().equals(newWord.toLowerCase());
+    private static String cleanText(String text) {
+        return text.trim().replace(" ", "").toLowerCase();
     }
 
-    public static boolean checkHeterogram(String word) {
+    public static boolean checkPalindrome(String text) {
+        String newText = cleanText(text);
+        if (newText.length() < 1) {
+            return false;
+        }
+        for (int i = 0; i < newText.length()/2; i++) {
+            if (newText.charAt(i) != newText.charAt(newText.length()-i-1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkHeterogram(String text) {
         Set<Character> setOfLetters = new HashSet<>();
-        for (char letter : word.toLowerCase().toCharArray()) {
+        String newText = cleanText(text);
+        for (char letter : newText.toCharArray()) {
             setOfLetters.add(letter);
         }
-        return word.length() == setOfLetters.size();
+        return newText.length() == setOfLetters.size();
     }
     public static void checkSentence() {
         System.out.println("Please write a sentence: ");
         Scanner scanner = new Scanner(System.in);
         String userSentence = scanner.nextLine();
-        boolean isPanagram = checkPanagram(userSentence);
+        boolean isPanagram = checkPangram(userSentence);
         System.out.println("Panagram: " + isPanagram);
     }
-    public static boolean checkPanagram(String sentence) {
+    public static boolean checkPangram(String sentence) {
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
         Set<Character> setAlphabet = new HashSet<>();
         for (char i : alphabet.toCharArray()) {
             setAlphabet.add(i);
         }
-        String cleanSentence = sentence.toLowerCase().replaceAll("\\s+","");
         Set<Character> setSentence = new HashSet<>();
-        for (char i : cleanSentence.toCharArray()) {
+        for (char i : cleanText(sentence).toCharArray()) {
             setSentence.add(i);
         }
-        return setSentence.size() == setAlphabet.size() && setSentence.equals(setAlphabet);
+        return setSentence.equals(setAlphabet);
     }
 
     public static void checkSentences() {
         System.out.println("Please write first sentence: ");
         Scanner scanner = new Scanner(System.in);
-        String firstSentence = scanner.nextLine();
+        String sentence1 = scanner.nextLine();
         System.out.println("Please write second sentence: ");
-        String secondSentence = scanner.nextLine();
-        boolean isAnagram = checkAnagram(firstSentence, secondSentence);
+        String sentence2 = scanner.nextLine();
+        boolean isAnagram = checkAnagram(sentence1, sentence2);
         System.out.println("Anagram: " + isAnagram);
     }
-    public static boolean checkAnagram(String firstSentence, String secondSentence) {
-        String cleanFirstSentence = firstSentence.toLowerCase().replaceAll("\\s+","");
-        String cleanSecondSentence = secondSentence.toLowerCase().replaceAll("\\s+","");
-        if (cleanFirstSentence.length() != cleanSecondSentence.length()){
-            return false;
-        }
-        char[] cleanFirstSentenceArray = cleanFirstSentence.toCharArray();
-        char[] cleanSecondSentenceArray = cleanSecondSentence.toCharArray();
-        Arrays.sort(cleanFirstSentenceArray);
-        Arrays.sort(cleanSecondSentenceArray);
-        return Arrays.equals(cleanFirstSentenceArray, cleanSecondSentenceArray);
+    private static String cleanSentence(String sentence) {
+        return sentence.trim().replaceAll("\\s+","").toLowerCase();
+    }
+    public static boolean checkAnagram(String sentence1, String sentence2) {
+        sentence1 = cleanSentence(sentence1);
+        sentence2 = cleanSentence(sentence2);
+        char[] sentence1Array = sentence1.toCharArray();
+        char[] sentence2Array = sentence2.toCharArray();
+        Arrays.sort(sentence1Array);
+        Arrays.sort(sentence2Array);
+        return Arrays.equals(sentence2Array, sentence1Array);
     }
 
 }
